@@ -11,7 +11,7 @@
     <title>Title</title>
 </head>
 <body>
-<h1>Default path: ${name}</h1>
+<h1>Default path: ${path}</h1>
 <h1>Enter path: </h1>
 </body>
 </html>
