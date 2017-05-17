@@ -1,10 +1,14 @@
+package model;
+
+import model.Files;
+
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 
 /**
  * Created by vasiliev on 5/17/2017.
  */
-class Roots implements Files {
+public class Roots implements Files {
     private static final FileSystemView fileSystemView = FileSystemView.getFileSystemView();
 
     @Override

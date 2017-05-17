@@ -1,3 +1,5 @@
+package model;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.EOFException;

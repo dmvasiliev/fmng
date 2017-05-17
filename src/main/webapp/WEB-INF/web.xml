@@ -7,7 +7,7 @@
 
     <servlet>
         <servlet-name>FileManagerServlet</servlet-name>
-        <servlet-class>FileManagerServlet</servlet-class>
+        <servlet-class>servlets.FileManagerServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>FileManagerServlet</servlet-name>

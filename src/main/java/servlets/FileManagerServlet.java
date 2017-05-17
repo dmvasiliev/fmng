@@ -1,3 +1,9 @@
+package servlets;
+
+import model.Directory;
+import model.Files;
+import model.Roots;
+import model.Search;
 import org.apache.commons.fileupload.ParameterParser;
 import org.zeroturnaround.zip.ZipUtil;
 
@@ -62,8 +68,8 @@ public class FileManagerServlet extends HttpServlet {
             writer.println("<!DOCTYPE html><html><head><style>*,input[type=\"file\"]::-webkit-file-upload-button{font-family:monospace}</style></head><body>");
             writer.println("<p>Current directory: " + files + "</p><pre>");
             if (!(files instanceof Roots)) {
-                writer.print("<form method=\"post\"><label for=\"search\">Search Files:</label> <input type=\"text\" name=\"search\" id=\"search\" value=\"" + (search != null ? search : "") + "\"> <button type=\"submit\">Search</button></form>");
-                writer.print("<form method=\"post\" enctype=\"multipart/form-data\"><label for=\"upload\">Upload Files:</label> <button type=\"submit\">Upload</button> <button type=\"submit\" name=\"unzip\">Upload & Unzip</button> <input type=\"file\" name=\"upload[]\" id=\"upload\" multiple></form>");
+                writer.print("<form method=\"post\"><label for=\"search\">model.Search model.Files:</label> <input type=\"text\" name=\"search\" id=\"search\" value=\"" + (search != null ? search : "") + "\"> <button type=\"submit\">model.Search</button></form>");
+                writer.print("<form method=\"post\" enctype=\"multipart/form-data\"><label for=\"upload\">Upload model.Files:</label> <button type=\"submit\">Upload</button> <button type=\"submit\" name=\"unzip\">Upload & Unzip</button> <input type=\"file\" name=\"upload[]\" id=\"upload\" multiple></form>");
                 writer.println();
             }
             if (files instanceof Directory) {
