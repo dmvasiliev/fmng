@@ -1,4 +1,4 @@
-package model;
+package models;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

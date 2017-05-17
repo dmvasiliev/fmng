@@ -1,6 +1,4 @@
-package model;
-
-import model.Files;
+package models;
 
 import java.io.File;
 import java.util.Arrays;

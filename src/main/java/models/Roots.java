@@ -1,6 +1,4 @@
-package model;
-
-import model.Files;
+package models;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
