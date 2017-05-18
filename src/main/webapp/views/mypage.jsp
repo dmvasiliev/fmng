@@ -1,18 +1,27 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: vasiliev
-  Date: 5/17/2017
-  Time: 12:04 PM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Initialization Page</title>
 </head>
 <body>
-<h1>Default path: ${path}</h1>
-<h1>Enter path: </h1>
+
+<form method="Post" action="/fm">
+    Default path: ${path}
+    <br/>
+    <b>Enter path:</b>
+    <input type="text" name="path"/>
+    <input type='submit'/>
+</form>
+
+<form method="Post" action="/fmanager">
+    Default path: ${path}
+    <br/>
+    <b>Enter path:</b>
+    <input type="text" name="path"/>
+    <input type='submit'/>
+</form>
+
 </body>
 </html>
 

@@ -10,14 +10,14 @@ import java.io.IOException;
 /**
  * Created by vasiliev on 5/17/2017.
  */
-@WebServlet("/")
+@WebServlet(name = "InitPath", urlPatterns = "/")
 public class MainServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("path", "e:\\");
+        request.setAttribute("path", "E:\\");
 
         request.getRequestDispatcher("views/mypage.jsp").forward(request, response);
     }

@@ -8,13 +8,12 @@ import services.Roots;
 import services.Search;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.*;
-import java.net.URLEncoder;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
@@ -23,30 +22,23 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Created by vasiliev on 5/17/2017.
+ * Created by vasiliev on 5/18/2017.
  */
-@MultipartConfig
-public class FileManagerServlet extends HttpServlet {
+@WebServlet(name = "FileManager", urlPatterns = "/fmanager")
+public class FileManager extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private static final String ENCODING = "UTF-8";
     private static final int BUFFER_SIZE = 4096;
 
-    /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-     */
-    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Files files = null;
         File file = null, parent;
         String path = request.getParameter("path");
         String type = request.getContentType();
         String search = request.getParameter("search");
         String mode;
-
-        //ToDo
-        if (path == null) {
-            path = "E:\\";
-        }
 
         if (path == null || !(file = new File(path)).exists())
             files = new Roots();
@@ -62,32 +54,15 @@ public class FileManagerServlet extends HttpServlet {
             files = directory(request, files, file, type, search);
         } else throw new ServletException("Unknown type of file or folder.");
 
-        if (files != null) {
-            final PrintWriter writer = response.getWriter();
-            writer.println("<!DOCTYPE html><html><head><style>*,input[type=\"file\"]::-webkit-file-upload-button{font-family:monospace}</style></head><body>");
-            writer.println("<p>Current directory: " + files + "</p><pre>");
-            if (!(files instanceof Roots)) {
-                writer.print("<form method=\"post\"><label for=\"search\">Search Files:</label> <input type=\"text\" name=\"search\" id=\"search\" value=\"" + (search != null ? search : "") + "\"> <button type=\"submit\">Search</button></form>");
-                writer.print("<form method=\"post\" enctype=\"multipart/form-data\"><label for=\"upload\">Upload Files:</label> <button type=\"submit\">Upload</button> <button type=\"submit\" name=\"unzip\">Upload & Unzip</button> <input type=\"file\" name=\"upload[]\" id=\"upload\" multiple></form>");
-                writer.println();
-            }
-            if (files instanceof Directory) {
-                writer.println("+ <a href=\"?path=" + URLEncoder.encode(path, ENCODING) + "\">.</a>");
-                if ((parent = file.getParentFile()) != null)
-                    writer.println("+ <a href=\"?path=" + URLEncoder.encode(parent.getAbsolutePath(), ENCODING) + "\">..</a>");
-                else writer.println("+ <a href=\"?path=\">..</a>");
-            }
+        request.setAttribute("path_attr", files);
+        request.setAttribute("file", file);
 
-            for (File child : files.listFiles()) {
-                writer.print(child.isDirectory() ? "+ " : "  ");
-                writer.print("<a href=\"?path=" + URLEncoder.encode(child.getAbsolutePath(), ENCODING) + "\" title=\"" + child.getAbsolutePath() + "\">" + child.getName() + "</a>");
-                if (child.isDirectory())
-                    writer.print(" <a href=\"?path=" + URLEncoder.encode(child.getAbsolutePath(), ENCODING) + "&zip\" title=\"download\">&#8681;</a>");
-                writer.println();
-            }
-            writer.print("</pre></body></html>");
-            writer.flush();
-        }
+        request.getRequestDispatcher("views/filemanager.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
     }
 
     private Files directory(HttpServletRequest request, Files files, File file, String type, String search) throws IOException, ServletException {

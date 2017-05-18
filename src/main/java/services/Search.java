@@ -1,4 +1,4 @@
-package models;
+package services;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +12,7 @@ import static java.nio.file.FileVisitResult.CONTINUE;
 /**
  * Created by vasiliev on 5/17/2017.
  */
-public class Search implements models.Files {
+public class Search implements Files {
     public final Path start;
     public final String search;
     private PathMatcher matcher;
