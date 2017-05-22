@@ -4,14 +4,14 @@
         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
         version="3.0">
 
-    <display-name>Archetype Created Web Application</display-name>
+    <display-name>FMNG</display-name>
 
     <servlet>
-        <servlet-name>FileManagerServlet</servlet-name>
-        <servlet-class>servlets.FileManagerServlet</servlet-class>
+        <servlet-name>FileManager</servlet-name>
+        <servlet-class>servlets.FileManager</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>FileManagerServlet</servlet-name>
-        <url-pattern>/fm</url-pattern>
+        <servlet-name>FileManager</servlet-name>
+        <url-pattern>/fmanager</url-pattern>
     </servlet-mapping>
 </web-app>

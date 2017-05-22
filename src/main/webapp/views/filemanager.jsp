@@ -3,57 +3,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>*, input[type="file"]::-webkit-file-upload-button {
-        font-family: monospace
-    }</style>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/default.css" />
 </head>
 <body>
-<c:if test="${not empty path_attr}">
-    <p>Current directory: ${path_attr} </p>
-    <%--<pre>--%>
-    <c:if test="${path_attr.getClass().name != 'services.Root'}">
-        <c:out value="${path_attr.getClass().name}"/>
-        <br/>
-        <form method="post">
-            <label for="search">Search Files:</label>
-            <input type="text" name="search" id="search"
-                   value="<c:out value="${not empty param.search ? param.search : ''}" />">
-            <button type="submit">Search</button>
-        </form>
-        <form method="post" enctype="multipart/form-data">
-            <label for="upload">Upload Files:</label>
-            <button type="submit">Upload</button>
-            <button type="submit" name="unzip">Upload & Unzip</button>
-            <input type="file" name="upload[]" id="upload" multiple>
-        </form>
-    </c:if>
+<c:if test="${not empty path}">
+    <table>
+        <caption>Current directory: ${path}</caption>
+        <tr>
+            <th class="col_type">Type</th>
+            <th class="col_name">Name</th>
+            <th class="col_size">Size(bytes)</th>
+        </tr>
+        <tr>
+            <c:if test="${isChild}">
+        <tr>
+            <td class="col_type"></td>
+            <td class="col_name"><a href="?path=${parentPath}">..</a></td>
+            <td class="col_size"></td>
+        </tr>
+        </c:if>
 
-    <%--ToDo if  Directory--%>
-    <c:if test="${path_attr.getClass().name == 'services.Directory'}">
-        <c:out value="${path_attr.getClass().name}"/>
-        <br/>
-        <c:url value="/" var="url">
-            <c:param name="path" value="${path_attr}"/>
-        </c:url>
-        <a href="${url}">.</a>
-        <%--<a href="?path=${URLEncoder.encode(path_attr, ENCODING)}>.</a>--%>
-        <%--<c:if test="${file != null}">--%>
-            <%--<c:param name="qaz" value="${file}"/>--%>
-        <%--</c:if>--%>
-    </c:if>
-
-    <%--/ ToDo if  getParentFile()) != null --%>
-    <%--<a href="?path=URLEncoder.encode(parent.getAbsolutePath(), ENCODING)">..</a>--%>
-    <%--ToDo else--%>
-    <%--<a href="?path=">..</a>--%>
-    <%--ToDo FOR files.listFiles()--%>
-    <%--<%writer.print(child.isDirectory() ? "+ " : "  ");%>--%>
-    <%--<a href="?path="URLEncoder.encode(child.getAbsolutePath(), ENCODING)" title="child.getAbsolutePath()"> child.getName() </a>--%>
-    <%--ToDo isDirectory--%>
-    <%--<a href="?path="URLEncoder.encode(child.getAbsolutePath(), ENCODING)"&zip title="download">&#8681;</a>--%>
-    <%--</pre>--%>
-
+        <c:if test="${not empty contents}">
+            <c:forEach items="${contents}" var="file">
+                <tr>
+                    <td class="col_type"><c:out value="${file.isDirectory() ? '+': '-'}"/></td>
+                    <td class="col_name">
+                        <c:if test="${file.isDirectory() == true}">
+                            <c:url value="/fmanager" var="url">
+                                <c:param name="path"
+                                         value="${file.getRelativePath()}${separator}${file.getName()}"/>
+                            </c:url>
+                            <a href="${url}"
+                               title="${file.getRelativePath()}${file.getName()}">${file.getName()}</a>
+                        </c:if>
+                        <c:if test="${file.isFile() == true}">
+                            <c:out value="${file.getName()}"/>
+                        </c:if>
+                    </td>
+                    <td class="col_size"><c:out value="${file.getSize()}"/></td>
+                </tr>
+            </c:forEach>
+        </c:if>
+        </tr>
+    </table>
 </c:if>
 </body>
 </html>

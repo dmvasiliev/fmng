@@ -1,165 +1,92 @@
 package servlets;
 
-import org.apache.commons.fileupload.ParameterParser;
-import org.zeroturnaround.zip.ZipUtil;
-import services.Directory;
-import services.Files;
-import services.Roots;
-import services.Search;
+import services.FileInfo;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
-import java.io.*;
-import java.nio.file.FileVisitResult;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Locale;
-import java.util.Map;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Properties;
 
 /**
  * Created by vasiliev on 5/18/2017.
  */
-@WebServlet(name = "FileManager", urlPatterns = "/fmanager")
 public class FileManager extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    private static final String ENCODING = "UTF-8";
-    private static final int BUFFER_SIZE = 4096;
-
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Files files = null;
-        File file = null, parent;
-        String path = request.getParameter("path");
-        String type = request.getContentType();
-        String search = request.getParameter("search");
-        String mode;
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String requestPath = req.getParameter("path");
 
-        if (path == null || !(file = new File(path)).exists())
-            files = new Roots();
-        else if (request.getParameter("zip") != null) {
-            zip(response, file);
-        } else if (request.getParameter("delete") != null) {
-            delete(file);
-        } else if ((mode = request.getParameter("mode")) != null) {
-            mode(file, mode);
-        } else if (file.isFile())
-            downloadFile(response, file);
-        else if (file.isDirectory()) {
-            files = directory(request, files, file, type, search);
-        } else throw new ServletException("Unknown type of file or folder.");
+        InputStream propertiesAsStream = getClass().getClassLoader().getResourceAsStream("config.properties");
+        String pathFromConfig;
+        if (propertiesAsStream != null) {
+            Properties properties = new Properties();
+            properties.load(propertiesAsStream);
+            pathFromConfig = (String) properties.get("defaultPath");
+        } else {
+            pathFromConfig = getServletContext().getRealPath("/");
+        }
 
-        request.setAttribute("path_attr", files);
-        request.setAttribute("file", file);
+        String path = pathFromConfig + (requestPath != null ? requestPath : File.separator);
+        req.setAttribute("path", requestPath == null || requestPath.isEmpty() ? File.separator : requestPath);
 
-        request.getRequestDispatcher("views/filemanager.jsp").forward(request, response);
-    }
+        Path childPath = Paths.get(path);
+        Path rootPath = Paths.get(pathFromConfig);
+        boolean isChild = childPath.toAbsolutePath().startsWith(pathFromConfig) && !(rootPath.equals(childPath));
+        req.setAttribute("isChild", isChild);
+        req.setAttribute("parentPath", isChild && childPath.getParent() != null ? URLEncoder.encode(File.separator + rootPath.relativize(childPath.getParent()).toString(), "UTF-8") : File.separator);
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        File[] listFiles = new File(path).listFiles();
+        ArrayList<FileInfo> contents = new ArrayList<>();
+        if (listFiles != null) {
+            for (File file : listFiles) {
+                FileInfo fileInfo = new FileInfo();
+                fileInfo.setName(file.getName());
+                String relativePath = rootPath.relativize(childPath).toString();
+                fileInfo.setRelativePath(relativePath.isEmpty() ? relativePath : File.separator + relativePath);
+                if (file.isDirectory()) {
+                    fileInfo.setDirectory(true);
+                    fileInfo.setSize(getFolderSize(file));
 
-    }
-
-    private Files directory(HttpServletRequest request, Files files, File file, String type, String search) throws IOException, ServletException {
-        if (search != null && !search.isEmpty())
-            files = new Search(file.toPath(), search);
-        else if (type != null && type.startsWith("multipart/form-data")) {
-            for (Part part : request.getParts()) {
-                String name;
-                if ((name = partFileName(part)) == null) //retrieves <input type="file" name="...">, no other (e.g. input) form fields
-                    continue;
-                if (request.getParameter("unzip") == null)
-                    try (OutputStream output = new FileOutputStream(new File(file, name))) {
-                        copyStream(part.getInputStream(), output);
-                    }
-                else ZipUtil.unpack(part.getInputStream(), file);
-            }
-        } else files = new Directory(file);
-        return files;
-    }
-
-    private void mode(File file, String mode) {
-        boolean add = mode.startsWith("+");
-        if (mode.indexOf('r') > -1)
-            file.setReadable(add);
-        if (mode.indexOf('w') > -1)
-            file.setWritable(add);
-        if (mode.indexOf('x') > -1)
-            file.setExecutable(add);
-    }
-
-    private void delete(File file) throws IOException {
-        if (file.isFile())
-            file.delete();
-        else if (file.isDirectory()) {
-            java.nio.file.Files.walkFileTree(file.toPath(), new SimpleFileVisitor<Path>() {
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    java.nio.file.Files.delete(file);
-                    return FileVisitResult.CONTINUE;
+                } else {
+                    fileInfo.setDirectory(false);
+                }
+                if (file.isFile()) {
+                    fileInfo.setFile(true);
+                    fileInfo.setSize(file.length());
+                } else {
+                    fileInfo.setFile(false);
                 }
 
-                @Override
-                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                    java.nio.file.Files.delete(dir);
-                    return FileVisitResult.CONTINUE;
-                }
-            });
-        }
-    }
-
-    private void zip(HttpServletResponse response, File file) throws IOException {
-        File zipFile = File.createTempFile(file.getName() + "-", ".zip");
-        if (file.isFile())
-            ZipUtil.addEntry(zipFile, file.getName(), file);
-        else if (file.isDirectory())
-            ZipUtil.pack(file, zipFile);
-        downloadFile(response, zipFile, permamentName(zipFile.getName()), "application/zip");
-    }
-
-    public static void downloadFile(HttpServletResponse response, File file) throws IOException {
-        downloadFile(response, file, file.getName());
-    }
-
-    public static void downloadFile(HttpServletResponse response, File file, String name) throws IOException {
-        String contentType = java.nio.file.Files.probeContentType(file.toPath());
-        downloadFile(response, file, name, contentType != null ? contentType : "application/octet-stream");
-    }
-
-    public static void downloadFile(HttpServletResponse response, File file, String name, String contentType) throws IOException {
-        response.setContentType(contentType);
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + name + "\"");
-        copyStream(new FileInputStream(file), response.getOutputStream());
-    }
-
-    public static void copyStream(InputStream input, OutputStream output) throws IOException {
-        int read;
-        byte buffer[] = new byte[BUFFER_SIZE];
-        while ((read = input.read(buffer)) > 0)
-            output.write(buffer, 0, read);
-    }
-
-    public static String permamentName(String temporaryName) {
-        return temporaryName.replaceAll("-\\d+(?=\\.(?!.*\\.))", "");
-    }
-
-    public String partFileName(Part part) {
-        String header, file = null;
-        if ((header = part.getHeader("content-disposition")) != null) {
-            String lowerHeader = header.toLowerCase(Locale.ENGLISH);
-            if (lowerHeader.startsWith("form-data") || lowerHeader.startsWith("attachment")) {
-                ParameterParser parser = new ParameterParser();
-                parser.setLowerCaseNames(true);
-                Map<String, String> parameters = parser.parse(header, ';');
-                if (parameters.containsKey("filename"))
-                    file = (file = parameters.get("filename")) != null ? file.trim() : "";
+                contents.add(fileInfo);
             }
         }
-        return file;
+
+        req.setAttribute("contents", contents);
+        req.setAttribute("separator", File.separator);
+
+        req.getRequestDispatcher("views/filemanager.jsp").forward(req, resp);
+    }
+
+    private long getFolderSize(File dir) {
+        long size = 0;
+        File[] files = dir.listFiles();
+        if (files != null && files.length > 0) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    size += file.length();
+                } else
+                    size += getFolderSize(file);
+            }
+        }
+        return size;
     }
 }

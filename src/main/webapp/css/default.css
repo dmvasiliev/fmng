@@ -1,0 +1,40 @@
+table {
+    width: 50%;
+}
+
+td {
+    padding: 5px;
+    padding-right: 10px;
+    border: 1px solid black;
+}
+
+td.col_type {
+    text-align: right;
+}
+
+td.col_name {
+    text-align: left;
+}
+
+td.col_size {
+    text-align: right;
+}
+
+th {
+    padding: 10px;
+    border: 1px solid black;
+    width: 300px;
+}
+
+th.col_type {
+    width: 10px;
+}
+
+th.col_size {
+    width: 100px;
+}
+
+caption {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
