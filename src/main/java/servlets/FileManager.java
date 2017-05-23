@@ -1,39 +1,34 @@
 package servlets;
 
 import services.FileInfo;
+import services.ProjectUtils;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Properties;
 
 /**
  * Created by vasiliev on 5/18/2017.
  */
+
+@MultipartConfig
 public class FileManager extends HttpServlet {
+
     private static final long serialVersionUID = 1L;
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String requestPath = req.getParameter("path");
 
-        InputStream propertiesAsStream = getClass().getClassLoader().getResourceAsStream("config.properties");
-        String pathFromConfig;
-        if (propertiesAsStream != null) {
-            Properties properties = new Properties();
-            properties.load(propertiesAsStream);
-            pathFromConfig = (String) properties.get("defaultPath");
-        } else {
-            pathFromConfig = getServletContext().getRealPath("/");
-        }
+        String pathFromConfig = ProjectUtils.getDefaultPath(this);
 
         String path = pathFromConfig + (requestPath != null ? requestPath : File.separator);
         req.setAttribute("path", requestPath == null || requestPath.isEmpty() ? File.separator : requestPath);

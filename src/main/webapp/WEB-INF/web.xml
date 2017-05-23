@@ -14,4 +14,26 @@
         <servlet-name>FileManager</servlet-name>
         <url-pattern>/fmanager</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Upload</servlet-name>
+        <servlet-class>servlets.Upload</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Upload</servlet-name>
+        <url-pattern>/upload</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>Download</servlet-name>
+        <servlet-class>servlets.Download</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Download</servlet-name>
+        <url-pattern>/download</url-pattern>
+    </servlet-mapping>
+
+    <listener>
+        <listener-class>servlets.Log4jInit</listener-class>
+    </listener>
 </web-app>

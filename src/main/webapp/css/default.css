@@ -3,9 +3,8 @@ table {
 }
 
 td {
-    padding: 5px;
-    padding-right: 10px;
     border: 1px solid black;
+    padding: 5px;
 }
 
 td.col_type {
@@ -20,8 +19,11 @@ td.col_size {
     text-align: right;
 }
 
+td.col_download {
+    text-align: center;
+}
+
 th {
-    padding: 10px;
     border: 1px solid black;
     width: 300px;
 }
@@ -35,6 +37,16 @@ th.col_size {
 }
 
 caption {
-    margin-bottom: 10px;
     font-size: 18px;
+}
+
+form.download {
+    display: flex;
+    height: 20px;
+    width: 75px;
+    margin: 0 auto;
+}
+
+input#download {
+    height: 20px;
 }

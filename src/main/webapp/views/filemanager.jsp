@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="./css/default.css" />
+    <link rel="stylesheet" type="text/css" href="./css/default.css"/>
 </head>
 <body>
 <c:if test="${not empty path}">
@@ -13,12 +13,16 @@
             <th class="col_type">Type</th>
             <th class="col_name">Name</th>
             <th class="col_size">Size(bytes)</th>
+            <th class="col_size">Download</th>
         </tr>
         <tr>
             <c:if test="${isChild}">
         <tr>
             <td class="col_type"></td>
-            <td class="col_name"><a href="?path=${parentPath}">..</a></td>
+            <td class="col_name">
+                <a href="/fmanager?path=${parentPath}">..</a>
+            </td>
+            <td class="col_size"></td>
             <td class="col_size"></td>
         </tr>
         </c:if>
@@ -41,11 +45,27 @@
                         </c:if>
                     </td>
                     <td class="col_size"><c:out value="${file.getSize()}"/></td>
+                    <td class="col_download">
+                        <c:if test="${file.isFile() == true}">
+                            <form method="POST" action="/download" class="download">
+                                <input type="hidden" value="${path}" name="path"/><br/>
+                                <input type="hidden" value="${file.getName()}" name="fileName"/><br/>
+                                <input type="submit" value="Download" name="download" id="download"/>
+                            </form>
+                        </c:if>
+                    </td>
                 </tr>
             </c:forEach>
         </c:if>
         </tr>
     </table>
+    <br/>
+    <br/>
+    <form method="POST" action="/upload" enctype="multipart/form-data">
+        File: <input type="file" name="file" id="file"/> <br/>
+        <input type="hidden" value="${path}" name="path"/><br/>
+        <input type="submit" value="Upload" name="upload" id="upload"/>
+    </form>
 </c:if>
 </body>
 </html>
