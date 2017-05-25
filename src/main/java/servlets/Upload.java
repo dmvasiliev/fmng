@@ -43,7 +43,7 @@ public class Upload extends HttpServlet {
             while ((read = fileContent.read(bytes)) != -1) {
                 out.write(bytes, 0, read);
             }
-            logger.error("File" + fileName + "being uploaded to " + path);
+            logger.debug("File" + fileName + "being uploaded to " + path);
         } catch (FileNotFoundException fne) {
             logger.error("Problems during file upload. Error: ", fne);
         } finally {
@@ -61,7 +61,7 @@ public class Upload extends HttpServlet {
 
     private String getFileName(final Part part) {
         final String partHeader = part.getHeader("content-disposition");
-        logger.error("Part Header = " + partHeader);
+        logger.debug("Part Header = " + partHeader);
         for (String content : part.getHeader("content-disposition").split(";")) {
             if (content.trim().startsWith("filename")) {
                 return content.substring(content.indexOf('=') + 1).trim().replace("\"", "");

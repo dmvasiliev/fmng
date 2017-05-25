@@ -5,7 +5,7 @@ package services;
  */
 public class FileInfo {
 
-    private String Name;
+    private String name;
     private String relativePath;
     private boolean isDirectory;
     private boolean isFile;
@@ -36,11 +36,11 @@ public class FileInfo {
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String fileName) {
-        this.Name = fileName;
+        this.name = fileName;
     }
 
     public String getRelativePath() {

@@ -16,6 +16,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>Directory</servlet-name>
+        <servlet-class>servlets.Directory</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Directory</servlet-name>
+        <url-pattern>/directory</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>Upload</servlet-name>
         <servlet-class>servlets.Upload</servlet-class>
     </servlet>

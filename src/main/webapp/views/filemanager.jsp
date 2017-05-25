@@ -4,9 +4,11 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="./css/default.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="./js/main.js"></script>
 </head>
 <body>
-<c:if test="${not empty path}">
+<%--<c:if test="${not empty path}">
     <table>
         <caption>Current directory: ${path}</caption>
         <tr>
@@ -23,7 +25,7 @@
                 <a href="/fmanager?path=${parentPath}">..</a>
             </td>
             <td class="col_size"></td>
-            <td class="col_size"></td>
+            <td class="col_download"></td>
         </tr>
         </c:if>
 
@@ -66,6 +68,6 @@
         <input type="hidden" value="${path}" name="path"/><br/>
         <input type="submit" value="Upload" name="upload" id="upload"/>
     </form>
-</c:if>
+</c:if>--%>
 </body>
 </html>

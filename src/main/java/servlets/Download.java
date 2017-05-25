@@ -35,7 +35,7 @@ public class Download extends HttpServlet {
         String mimeType = context.getMimeType(downloadFilePath);
         if (mimeType == null) {
             mimeType = "application/octet-stream";
-            logger.error("MIME type: " + mimeType);
+            logger.debug("MIME type: " + mimeType);
         }
 
         File downloadFile = new File(downloadFilePath);

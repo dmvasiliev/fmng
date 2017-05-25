@@ -68,7 +68,7 @@ public class FileManager extends HttpServlet {
         req.setAttribute("contents", contents);
         req.setAttribute("separator", File.separator);
 
-        req.getRequestDispatcher("views/filemanager.jsp").forward(req, resp);
+        req.getRequestDispatcher("views/index.xhtml").forward(req, resp);
     }
 
     private long getFolderSize(File dir) {
