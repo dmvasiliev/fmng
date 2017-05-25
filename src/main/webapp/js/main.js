@@ -10,6 +10,7 @@ $(document).ready(function () {
         data: {path: path},
         success: function (result) {
             update(result);
+            $("table").after(addUpload(result));
 
         }
     });
@@ -43,6 +44,30 @@ $(document).ready(function () {
             return $("<tr></tr>").append(addTdTag("col_type"), col2, addTdTag("col_size"), addTdTag("col_download"));
         }
         return "";
+    }
+
+    function addUpload(result) {
+        var $form = "";
+        var $inputFile = $("<input>").attr({
+            type: 'file',
+            name: "file",
+            id: "file"
+        });
+        var $inputPath = $('<input>').attr({
+            type: 'hidden',
+            name: "path",
+            value: path
+        });
+        var $inputUpload = $('<input>').attr({
+            type: 'submit',
+            name: "upload",
+            value: "Upload",
+            id: "upload"
+        });
+        $form = $("<form></form>").attr("method", "POST")
+            .attr("action", "/upload")
+            .attr("enctype", "multipart/form-data");
+        return $form.append($inputFile, $inputPath, $inputUpload);
     }
 
     function addTdTag(attributeName) {
@@ -111,43 +136,43 @@ $(document).ready(function () {
 //    });
 //});
 
-        //$("a.parentPath").click(function () {
-        //    var uri = encodeURI($(this).attr('href'));
-        //    $.ajax({
-        //        type: "get",
-        //        url: uri,
-        //        success: function (result) {
-        //            update(result);
-        //        }
-        //    });
-        //});
-        //
-        //$("a .childPath").click(function () {
-        //    var uri = encodeURI($(this).attr('href'));
-        //    $.ajax({
-        //        type: "get",
-        //        url: uri,
-        //        success: function (result) {
-        //            update(result);
-        //        }
-        //    });
-        //});
+//$("a.parentPath").click(function () {
+//    var uri = encodeURI($(this).attr('href'));
+//    $.ajax({
+//        type: "get",
+//        url: uri,
+//        success: function (result) {
+//            update(result);
+//        }
+//    });
+//});
+//
+//$("a .childPath").click(function () {
+//    var uri = encodeURI($(this).attr('href'));
+//    $.ajax({
+//        type: "get",
+//        url: uri,
+//        success: function (result) {
+//            update(result);
+//        }
+//    });
+//});
 
-        //$("p.childPath").click(function () {
-        //    var uri = encodeURI(parentPath + separator + $(this).text());
-        //    $.ajax({
-        //        type: "get",
-        //        url: uri,
-        //        data: {path: parentPath + separator + $(this).text()},
-        //        success: function (result) {
-        //            update(result);
-        //        }
-        //    });
-        //});
+//$("p.childPath").click(function () {
+//    var uri = encodeURI(parentPath + separator + $(this).text());
+//    $.ajax({
+//        type: "get",
+//        url: uri,
+//        data: {path: parentPath + separator + $(this).text()},
+//        success: function (result) {
+//            update(result);
+//        }
+//    });
+//});
 
-        //$("p.childPath").click(function () {
-        //    $("p").hide();
-        //});
+//$("p.childPath").click(function () {
+//    $("p").hide();
+//});
 
 
 
