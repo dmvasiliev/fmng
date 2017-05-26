@@ -1,14 +1,19 @@
-var path = null;
+var currentPath = "";
 var separator = "";
 var parentPath = "";
 
-function queryServer(path) {
+$(document).ready(function () {
+    queryServer(null);
+    addUploadForm()
+});
+
+function queryServer(pathTo) {
     $.ajax({
         type: "get",
         url: "directory",
-        data: {path: path},
+        data: {path: pathTo},
         success: function (result) {
-            // $("#fmanager_panel > tr").remove();
+            $("caption").text("Current directory: " + (pathTo === null ? result.separator : pathTo));
             $("table").find("tr:gt(0)").remove();
             fillTable(result);
         }
@@ -17,95 +22,91 @@ function queryServer(path) {
 
 function fillTable(result) {
     if (result.path !== null) {
-        path = result.path;
+        currentPath = result.path;
         separator = result.separator;
         parentPath = result.parentPath;
 
-
-        $("caption").text("Current directory: " + path);
+        //add .. if not root
         $("table").append(appendParentRow(result));
 
+        //add table's rows
         var contents = result.contents;
         if (contents) {
             $.each(contents, function (i, file) {
                 $("table").append(appendFileRow(file));
             });
         }
-
-        // $("table").after(addUpload(result));
     }
 }
 
 function appendParentRow(result) {
     var isChild = result.isChild;
     if (isChild === "true") {
-        var rootCell = $("<a></a>").attr("href", "/directory?path=" + result.parentPath);
-        rootCell.attr("class", "parentPath");
-        var $href = rootCell.text("..");
-        var col2 = addTdTag("col_name");
-        col2.append($href);
-        return $("<tr></tr>").append(addTdTag("col_type"), col2, addTdTag("col_size"), addTdTag("col_download"));
+        var rootCell = $("<p></p>").attr({
+            title: result.parentPath
+        });
+        var $rootCellWithText = rootCell.text("..");
+        var td_nameColumn = addTdTag("col_name").attr({
+            id: "parentPath"
+        });
+        td_nameColumn.append($rootCellWithText);
+        var $tr = $("<tr></tr>").attr({
+            class: "row"
+        });
+        return $tr.append(addTdTag("col_type"), td_nameColumn, addTdTag("col_size"), addTdTag("col_download"));
     }
     return "";
+}
+
+function appendFileRow(file) {
+    //add row
+    var $tr = $("<tr></tr>").attr({
+        class: "row"
+    });
+
+    var typeColumn = fillTypeColumn(file);
+    var nameColumn = fillNameColumn(file);
+    var sizeColumn = fillSizeColumn(file);
+    var downloadColumn = fillDownloadColumn(file);
+    return $tr.append(typeColumn, nameColumn, sizeColumn, downloadColumn);
 }
 
 function addTdTag(attributeName) {
     return $("<td></td>").attr("class", attributeName);
 }
 
-function addUpload(result) {
-    var $form = "";
-    var $inputFile = $("<input>").attr({
-        type: 'file',
-        name: "file",
-        id: "file"
-    });
-    var $inputPath = $('<input>').attr({
-        type: 'hidden',
-        name: "path",
-        value: path
-    });
-    var $inputUpload = $('<input>').attr({
-        type: 'submit',
-        name: "upload",
-        value: "Upload",
-        id: "upload"
-    });
-    $form = $("<form></form>").attr("method", "POST")
-        .attr("action", "/upload")
-        .attr("enctype", "multipart/form-data");
-    return $form.append($inputFile, $inputPath, $inputUpload);
+function fillTypeColumn(file) {
+    var isDirectory = file.isDirectory;
+    var td_TypeColumn = $("<td></td>").attr("class", "col_type");
+    return td_TypeColumn.text(isDirectory ? "+" : "-");
 }
 
-function appendFileRow(file) {
+function fillNameColumn(file) {
     var isDirectory = file.isDirectory;
-    var td_col1 = $("<td></td>").attr("class", "col_type");
-    var col1 = td_col1.text(isDirectory ? "-" : "+");
-
-    var $fileName = "";
+    var $td_nameColumn = $("<td></td>");
+    var $tagP = $("<p></p>");
     if (isDirectory) {
-        var filePath = file.relativePath + separator + file.name;
-        $fileName = $("<p></p>")//.attr("href", "/directory?path=" + filePath)
-            .attr("title", file.relativePath + separator + file.name)
-            .attr("class", "childPath")
-            .attr("onclick", "queryServer(\"" + filePath + "\")")
+        $tagP = $tagP.attr("title", file.relativePath + separator + file.name)
             .text(file.name);
+        $td_nameColumn = $td_nameColumn.attr("class", "tdNameDir");
     }
     if (file.isFile) {
-        $fileName = $("<p></p>").attr("id", "childPath").text(file.name);
+        $tagP = $tagP.text(file.name);
+        $td_nameColumn = $td_nameColumn.attr("class", "tdNameFile");
     }
-    var $td_col2 = $("<td></td>").attr("class", "col_name");
-    var col2 = $td_col2.append($fileName);
+    return $td_nameColumn.append($tagP);
+}
 
-
-    var col3 = $("<td></td>").attr("class", "col_size").text(file.size);
-
-    var $form = "";
+function fillSizeColumn(file) {
+    return $("<td></td>").attr("class", "col_size").text(file.size);
+}
+function fillDownloadColumn(file) {
+    var $tagForm = "";
     if (file.isFile) {
         var $inputPath = $("<input>").attr({
             type: 'hidden',
             name: "path",
-            value: path
+            value: currentPath
         });
         var $inputName = $('<input>').attr({
             type: 'hidden',
@@ -118,65 +119,58 @@ function appendFileRow(file) {
             value: "Download",
             id: "download"
         });
-        $form = $("<form></form>").attr("method", "POST")
+        $tagForm = $("<form></form>").attr("method", "POST")
             .attr("action", "/download")
             .attr("class", "download");
-        $form.append($inputPath, $inputName, $inputButton);
+        $tagForm.append($inputPath, $inputName, $inputButton);
     }
-    var $td_col4 = $("<td></td>").attr("class", "col_download");
-    var col4 = $td_col4.append($form);
 
-    var $tr = $("<tr></tr>");
-    return $tr.append(col1, col2, col3, col4);
+    var $td_downloadColumn = $("<td></td>").attr("class", "col_download");
+
+    return $td_downloadColumn.append($tagForm);
 }
 
-$(document).ready(function () {
-    queryServer(null);
+function addUploadForm() {
+    var $inputFile = $("<input>").attr({
+        type: 'file',
+        name: "file",
+        id: "file"
+    });
+    var $inputPath = $('<input>').attr({
+        type: 'hidden',
+        name: "path",
+        value: currentPath
+    });
+    var $inputUpload = $('<input>').attr({
+        type: 'submit',
+        name: "upload",
+        value: "Upload",
+        id: "upload"
+    });
+    var $form = $("<form></form>").attr("method", "POST")
+        .attr("action", "/upload")
+        .attr("enctype", "multipart/form-data");
+
+    $form = $form.append($inputFile, $inputPath, "<br />", $inputUpload);
+
+    $("table").after("<p id='indent'><br /><br /></p>");
+    $("p#indent").after($form);
+}
+
+$(document)
+    .on("mouseenter", "tr.row", function () {
+        $(this).children("td").css({"color": "red", "border": "1px solid red"});
+    })
+    .on("mouseleave", "tr.row", function () {
+        $(this).children("td").css({"color": "black", "border": "1px solid black"});
+    });
+
+$(document).on("dblclick", "td.tdNameDir", function () {
+    var pathTo = $(this).children("p").attr("title");
+    queryServer(pathTo);
 });
 
-//$(document).ready(function () {
-//    $("table").click(function () {
-//        $(this).hide();
-//    });
-//});
-
-//$("a.parentPath").click(function () {
-//    var uri = encodeURI($(this).attr('href'));
-//    $.ajax({
-//        type: "get",
-//        url: uri,
-//        success: function (result) {
-//            fillTable(result);
-//        }
-//    });
-//});
-//
-//$("a .childPath").click(function () {
-//    var uri = encodeURI($(this).attr('href'));
-//    $.ajax({
-//        type: "get",
-//        url: uri,
-//        success: function (result) {
-//            fillTable(result);
-//        }
-//    });
-//});
-
-//$("p.childPath").click(function () {
-//    var uri = encodeURI(parentPath + separator + $(this).text());
-//    $.ajax({
-//        type: "get",
-//        url: uri,
-//        data: {path: parentPath + separator + $(this).text()},
-//        success: function (result) {
-//            fillTable(result);
-//        }
-//    });
-//});
-
-//$("p.childPath").click(function () {
-//    $("p").hide();
-//});
-
-
-
+$(document).on("dblclick", "td#parentPath", function () {
+    var pathTo = $(this).children("p").attr("title");
+    queryServer(pathTo);
+});
