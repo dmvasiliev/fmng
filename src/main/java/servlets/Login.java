@@ -16,7 +16,7 @@ import java.util.Properties;
 public class Login extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/views/login.xhtml").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/login.xhtml").forward(request, response);
     }
 
     @Override
@@ -24,6 +24,7 @@ public class Login extends HttpServlet {
         PrintWriter out = response.getWriter();
         String user = request.getParameter("user");
         if (user == null) {
+            //ToDo
         } else {
             String password = request.getParameter("password");
 

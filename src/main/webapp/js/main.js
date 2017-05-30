@@ -184,6 +184,6 @@ $(document).on('captionChanged', function() {
     $("input#uploadPath").attr("value", currentPath);
 });
 
-$("#formUpload").bind('ajax:complete', function() {
-    queryServer(currentPath);
-});
+// $("#formUpload").bind('ajax:complete', function() {
+//     queryServer(currentPath);
+// });
