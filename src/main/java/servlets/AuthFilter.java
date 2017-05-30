@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
  * Created by vasiliev on 5/29/2017.
@@ -19,18 +18,18 @@ public class AuthFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) resp;
 
-/*        HttpSession session = request.getSession(false);
-        String loginURI = "/fm/login";
+        HttpSession session = request.getSession(false);
+        String loginURI = "login";
 
         boolean loggedIn = session != null && session.getAttribute("user") != null;
         boolean loginRequest = request.getRequestURI().equals(loginURI);
 
-        if (loggedIn || loginRequest) {*/
+        if (loggedIn || loginRequest) {
             chain.doFilter(request, response);
-/*        } else {
+        } else {
             request.setAttribute("requestURI", request.getRequestURI());
             response.sendRedirect(loginURI);
-        }*/
+        }
 
     }
 
