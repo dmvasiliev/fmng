@@ -102,7 +102,6 @@
         <url-pattern>/second/*</url-pattern>
         <url-pattern>/upload/*</url-pattern>
         <url-pattern>/download/*</url-pattern>
-        <!--<url-pattern>/directory/*</url-pattern>-->
     </filter-mapping>
 
     <listener>

@@ -20,6 +20,6 @@ public class Welcome extends HttpServlet {
         PrintWriter out = response.getWriter();
         out.print("test");
         out.close();
-        request.getRequestDispatcher("/index.xhtml").forward(request, response);
+        request.getRequestDispatcher("index.xhtml").forward(request, response);
     }
 }

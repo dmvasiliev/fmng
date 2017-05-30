@@ -14,7 +14,7 @@ import java.io.PrintWriter;
 public class Logout extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/views/logout.html").include(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/logout.xhtml").include(request, response);
     }
 
     @Override
@@ -22,10 +22,10 @@ public class Logout extends HttpServlet {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
-        request.getRequestDispatcher("/views/logout.html").include(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/logout.xhtml").include(request, response);
 
         HttpSession session = request.getSession();
-//        session.invalidate();
+        session.invalidate();
 
         out.print("You are successfully logged out!");
 

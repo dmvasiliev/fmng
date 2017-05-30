@@ -24,7 +24,8 @@ public class Login extends HttpServlet {
         PrintWriter out = response.getWriter();
         String user = request.getParameter("user");
         if (user == null) {
-            //ToDo
+            request.getRequestDispatcher("/WEB-INF/views/login.xhtml").forward(request, response);
+            out.println("Unknown login or password, please try again");
         } else {
             String password = request.getParameter("password");
 
@@ -37,9 +38,14 @@ public class Login extends HttpServlet {
 
             if (userPassword != null && password.equals(userPassword)) {
                 request.getSession().setAttribute("user", user);
+                request.getRequestDispatcher("/WEB-INF/views/login.xhtml").forward(request, response);
+                out.println("You are successfully logged in!");
+            } else {
+                out.println("Unknown login or password, please try again");
+                request.getRequestDispatcher("/WEB-INF/views/login.xhtml").forward(request, response);
             }
-            out.println("Вы успешно залогинились и будите перенаправлены.....");
-            response.sendRedirect("index.xhtml");
+            out.close();
+//            response.sendRedirect("index.xhtml");
         }
     }
 }
