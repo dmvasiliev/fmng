@@ -88,7 +88,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Logout</servlet-name>
-        <url-pattern>/logout/*</url-pattern>
+        <url-pattern>/logout</url-pattern>
     </servlet-mapping>
 
     <filter>
@@ -97,11 +97,11 @@
     </filter>
     <filter-mapping>
         <filter-name>AuthFilter</filter-name>
-        <!--<url-pattern>/fmanager/*</url-pattern>-->
+        <url-pattern>/fmanager/*</url-pattern>
         <url-pattern>/first/*</url-pattern>
         <url-pattern>/second/*</url-pattern>
-        <!--<url-pattern>/directory/*</url-pattern>-->
-        <!--<url-pattern>/directory/*</url-pattern>-->
+        <url-pattern>/upload/*</url-pattern>
+        <url-pattern>/download/*</url-pattern>
         <!--<url-pattern>/directory/*</url-pattern>-->
     </filter-mapping>
 
