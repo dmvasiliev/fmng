@@ -8,17 +8,18 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * Created by vasiliev on 5/26/2017.
+ * Created by Dmitry on 30.05.2017.
  */
-public class SecondPageServlet extends HttpServlet {
+public class Welcome extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/views/second.xhtml").forward(request, response);
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        PrintWriter writer = response.getWriter();
-//        writer.print(request.getSession(false).getAttribute("user"));
-        request.getRequestDispatcher("/WEB-INF/views/second.xhtml").forward(request, response);
-        writer.close();
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        out.print("test");
+        out.close();
+        request.getRequestDispatcher("/index.xhtml").forward(request, response);
     }
 }

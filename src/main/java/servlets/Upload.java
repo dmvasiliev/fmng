@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.*;
+import java.net.URLEncoder;
 
 /**
  * Created by vasiliev on 5/23/2017.
@@ -57,6 +58,7 @@ public class Upload extends HttpServlet {
 
         req.setAttribute("path", requestPath);
         req.getRequestDispatcher("fmanager").forward(req, resp);
+//        resp.sendRedirect(requestPath != null ? "fmanager?path=" + URLEncoder.encode(requestPath, "UTF-8") : "fmanager");
     }
 
     private String getFileName(final Part part) {

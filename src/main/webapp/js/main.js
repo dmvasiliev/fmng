@@ -13,19 +13,22 @@ function queryServer(pathTo) {
         url: "directory",
         data: {path: pathTo},
         success: function (result) {
-            $("caption").text("Current directory: " + (pathTo === null ? result.separator : pathTo));
+            updateVariables(result);
+            $("caption").text("Current directory: " + (pathTo === null ? result.separator : pathTo)).trigger('captionChanged');
             $("table").find("tr:gt(0)").remove();
             fillTable(result);
         }
     });
 }
 
+function updateVariables(result) {
+    currentPath = result.path;
+    separator = result.separator;
+    parentPath = result.parentPath;
+}
+
 function fillTable(result) {
     if (result.path !== null) {
-        currentPath = result.path;
-        separator = result.separator;
-        parentPath = result.parentPath;
-
         //add .. if not root
         $("table").append(appendParentRow(result));
 
@@ -120,7 +123,7 @@ function fillDownloadColumn(file) {
             id: "download"
         });
         $tagForm = $("<form></form>").attr("method", "POST")
-            .attr("action", "/download")
+            .attr("action", "download")
             .attr("class", "download");
         $tagForm.append($inputPath, $inputName, $inputButton);
     }
@@ -139,7 +142,8 @@ function addUploadForm() {
     var $inputPath = $('<input>').attr({
         type: 'hidden',
         name: "path",
-        value: currentPath
+        value: currentPath,
+        id: "uploadPath"
     });
     var $inputUpload = $('<input>').attr({
         type: 'submit',
@@ -148,7 +152,8 @@ function addUploadForm() {
         id: "upload"
     });
     var $form = $("<form></form>").attr("method", "POST")
-        .attr("action", "/upload")
+        .attr("action", "upload")
+        .attr("id", "formUpload")
         .attr("enctype", "multipart/form-data");
 
     $form = $form.append($inputFile, $inputPath, "<br />", $inputUpload);
@@ -173,4 +178,12 @@ $(document).on("dblclick", "td.tdNameDir", function () {
 $(document).on("dblclick", "td#parentPath", function () {
     var pathTo = $(this).children("p").attr("title");
     queryServer(pathTo);
+});
+
+$(document).on('captionChanged', function() {
+    $("input#uploadPath").attr("value", currentPath);
+});
+
+$("#formUpload").bind('ajax:complete', function() {
+    queryServer(currentPath);
 });
