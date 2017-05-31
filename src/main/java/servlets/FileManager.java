@@ -16,7 +16,6 @@ public class FileManager extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("aaa", "bbb");
         req.getRequestDispatcher("/WEB-INF/views/fmanager.xhtml").forward(req, resp);
     }
 }

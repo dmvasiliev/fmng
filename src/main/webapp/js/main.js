@@ -183,7 +183,3 @@ $(document).on("dblclick", "td#parentPath", function () {
 $(document).on('captionChanged', function() {
     $("input#uploadPath").attr("value", currentPath);
 });
-
-// $("#formUpload").bind('ajax:complete', function() {
-//     queryServer(currentPath);
-// });

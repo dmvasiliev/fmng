@@ -2,21 +2,33 @@
 <!DOCTYPE html
         PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xml:lang="en" lang="en">
 <head>
     <title>Welcome</title>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="./js/index.js"></script>
 </head>
 <body>
+
 <h1>Welcome</h1>
 
-<a href="fmanager" title="Fmanager">Fmanager</a>
-<br />
-<a href="login" title="Login">Login</a>
-<br />
-<a href="first" title="First Page">First Page</a>
-<br />
-<a href="second" title="Second Page">Second Page</a>
-<br />
-<a href="logout" title="Logout">LogOut</a>
+<div id="divId" style="display:block;">
+    Username : <input type="text" name="username" id="username"/> <br/>
+    Password : <input type="password" name="password" id="password"/><br/>
+    <button name="login" id="login">Login</button>
+</div>
+<div id="ifLoginBlock" style="display:none;">
+    <a href="fmanager" title="Fmanager">Fmanager</a>
+    <br/>
+    <a href="first" title="First Page">First Page</a>
+    <br/>
+    <a href="second" title="Second Page">Second Page</a>
+    <br/>
+    <br/>
+    <a href="logout" title="Logout" id="logoutHref">Logout</a>
+    <br/>
+</div>
+<div id="messageDiv" style="display:none;"></div>
 </body>
 </html>

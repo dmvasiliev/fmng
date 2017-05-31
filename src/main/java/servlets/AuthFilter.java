@@ -29,7 +29,6 @@ public class AuthFilter implements Filter {
             request.setAttribute("requestURI", request.getRequestURI());
             response.sendRedirect(loginURI);
         }
-
     }
 
     public void init(FilterConfig config) throws ServletException {
