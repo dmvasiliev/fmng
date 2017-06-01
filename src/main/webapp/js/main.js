@@ -4,7 +4,10 @@ var parentPath = "";
 
 $(document).ready(function () {
     queryServer(null);
-    addUploadForm()
+    addUploadForm();
+    $("#logoutHref").on('click', function () {
+        logout();
+    });
 });
 
 function queryServer(pathTo) {
@@ -180,6 +183,19 @@ $(document).on("dblclick", "td#parentPath", function () {
     queryServer(pathTo);
 });
 
-$(document).on('captionChanged', function() {
+$(document).on('captionChanged', function () {
     $("input#uploadPath").attr("value", currentPath);
 });
+
+function logout() {
+    $.ajax({
+        url: "logout",
+        type: "get",
+        success: function (results) {
+            if (results === "SUCCESS") {
+                alert("You are successfully logged out.");
+                window.location.href = "index.xhtml";
+            }
+        }
+    });
+}

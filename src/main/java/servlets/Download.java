@@ -26,7 +26,7 @@ public class Download extends HttpServlet {
         String requestPath = req.getParameter("path");
         String fileName = req.getParameter("fileName");
 
-        String pathFromConfig = ProjectUtils.getDefaultPath(this);
+        String pathFromConfig = ProjectUtils.getDefaultPath(this, req);
 
         String path = pathFromConfig + (requestPath != null ? requestPath : File.separator);
         String downloadFilePath = path + File.separator + fileName;

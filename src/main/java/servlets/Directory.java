@@ -31,7 +31,7 @@ public class Directory extends HttpServlet {
         Map<String, Object> options = new LinkedHashMap<>();
 
         String requestPath = request.getParameter("path");
-        String pathFromConfig = ProjectUtils.getDefaultPath(this);
+        String pathFromConfig = ProjectUtils.getDefaultPath(this, request);
         String path = pathFromConfig + (requestPath != null ? File.separator + requestPath : File.separator);
         options.put("path", requestPath == null || requestPath.isEmpty() ? File.separator : requestPath);
 

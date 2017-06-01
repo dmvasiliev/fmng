@@ -10,6 +10,7 @@
         <welcome-file>index.xhtml</welcome-file>
     </welcome-file-list>
 
+    <!--db connection info-->
     <context-param>
         <param-name>dbUser</param-name>
         <param-value>root</param-value>
@@ -23,6 +24,7 @@
         <param-value>jdbc:mysql://localhost:3306/fmdb</param-value>
     </context-param>
 
+    <!--Servlets-->
     <servlet>
         <servlet-name>Login</servlet-name>
         <servlet-class>servlets.Login</servlet-class>
@@ -95,6 +97,7 @@
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
 
+    <!--Filters-->
     <filter>
         <filter-name>AuthFilter</filter-name>
         <filter-class>servlets.AuthFilter</filter-class>
@@ -108,6 +111,8 @@
         <url-pattern>/download</url-pattern>
     </filter-mapping>
 
+
+    <!--Listeners-->
     <listener>
         <listener-class>servlets.Log4jInit</listener-class>
     </listener>

@@ -13,14 +13,12 @@ import java.io.IOException;
 public class Logout extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        request.getRequestDispatcher("/WEB-INF/views/logout.xhtml").include(request, response);
         HttpSession session = request.getSession();
         session.invalidate();
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
         response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
         response.setDateHeader("Expires", 0);
         response.getWriter().write("SUCCESS");
-//        response.sendRedirect("index.xhtml");
     }
 
     @Override

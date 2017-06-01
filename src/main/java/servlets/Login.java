@@ -15,7 +15,6 @@ import java.util.Properties;
 public class Login extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        request.getRequestDispatcher("/WEB-INF/views/login.xhtml").forward(request, response);
         if (!request.getParameterMap().isEmpty()) {
             String username = request.getParameter("username");
             String password = request.getParameter("password");

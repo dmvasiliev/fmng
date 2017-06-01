@@ -24,7 +24,7 @@ public class Upload extends HttpServlet {
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String requestPath = req.getParameter("path");
 
-        String pathFromConfig = ProjectUtils.getDefaultPath(this);
+        String pathFromConfig = ProjectUtils.getDefaultPath(this, req);
 
         String path = pathFromConfig + (requestPath != null ? requestPath : File.separator);
 
@@ -57,7 +57,6 @@ public class Upload extends HttpServlet {
 
         req.setAttribute("path", requestPath);
         req.getRequestDispatcher("fmanager").forward(req, resp);
-//        resp.sendRedirect(requestPath != null ? "fmanager?path=" + URLEncoder.encode(requestPath, "UTF-8") : "fmanager");
     }
 
     private String getFileName(final Part part) {
