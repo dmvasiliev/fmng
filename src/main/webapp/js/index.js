@@ -15,7 +15,7 @@ $(document).ready(function () {
 
         $.ajax({
             url: "login",
-            type: "get",
+            type: "post",
             data: {
                 username: username,
                 password: password
@@ -26,6 +26,10 @@ $(document).ready(function () {
                         $('#divId').css("display", "none");
                         $('#ifLoginBlock').css("display", "block");
                         alert("You are successfully logged in.");
+                    }else {
+                        if (results === "FAILURE") {
+                            alert("Username or Password incorrect.");
+                        }
                     }
                 } else {
                     alert("Some exception occurred! Please try again.");

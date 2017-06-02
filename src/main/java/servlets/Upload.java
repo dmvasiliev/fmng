@@ -54,9 +54,6 @@ public class Upload extends HttpServlet {
                 fileContent.close();
             }
         }
-
-        req.setAttribute("path", requestPath);
-        req.getRequestDispatcher("fmanager").forward(req, resp);
     }
 
     private String getFileName(final Part part) {

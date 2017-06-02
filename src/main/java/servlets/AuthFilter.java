@@ -26,7 +26,6 @@ public class AuthFilter implements Filter {
         if (loggedIn || loginRequest) {
             chain.doFilter(request, response);
         } else {
-            request.setAttribute("requestURI", request.getRequestURI());
             response.sendRedirect(loginURI);
         }
     }

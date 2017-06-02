@@ -1,7 +1,6 @@
 package services;
 
 import org.apache.log4j.Logger;
-import servlets.Directory;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +19,7 @@ import java.util.Properties;
  */
 
 public class ProjectUtils {
-    private final static Logger logger = Logger.getLogger(Directory.class);
+    private final static Logger logger = Logger.getLogger(ProjectUtils.class);
 
     private ProjectUtils() {
     }
@@ -69,7 +68,7 @@ public class ProjectUtils {
 
         User userInfo = getUserInfo(httpServlet, loginName);
         String folderName = getFolderName(userInfo);
-        return File.separator + "workarea" + (folderName.isEmpty() ? "" : File.separator + folderName + File.separator + userInfo.getId());
+        return File.separator + "workarea" + (folderName.isEmpty() ? "" : File.separator + folderName);
     }
 
     public static String getFolderName(User userFromDB) {
@@ -78,7 +77,8 @@ public class ProjectUtils {
         if (customerId == null && supplierId == null) {
             return "";
         } else {
-            return customerId == null ? UserGroups.SUPPLIER.getFolderName() : UserGroups.CUSTOMER.getFolderName();
+            return customerId == null ? UserGroups.SUPPLIER.getFolderName() + File.separator + supplierId :
+                    UserGroups.CUSTOMER.getFolderName() + File.separator + customerId;
         }
     }
 }

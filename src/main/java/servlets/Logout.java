@@ -23,16 +23,6 @@ public class Logout extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-/*        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
 
-        request.getRequestDispatcher("/WEB-INF/views/logout.xhtml").include(request, response);
-
-        HttpSession session = request.getSession();
-        session.invalidate();
-
-        out.print("You are successfully logged out!");
-
-        out.close();*/
     }
 }

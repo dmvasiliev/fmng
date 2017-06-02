@@ -8,6 +8,13 @@ $(document).ready(function () {
     $("#logoutHref").on('click', function () {
         logout();
     });
+
+    $('#formUpload').ajaxForm({
+        success: function(msg) {
+            alert("File has been uploaded successfully");
+            queryServer(currentPath);
+        }
+    });
 });
 
 function queryServer(pathTo) {

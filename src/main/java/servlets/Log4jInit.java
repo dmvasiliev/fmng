@@ -47,8 +47,8 @@ public class Log4jInit implements ServletContextListener {
                         File supplierId = new File(suppliers, i + 1 + "");
                         boolean mkdir1 = supplierId.mkdir();
                         if (mkdir1) {
-                            new File(customerId, "global").mkdir();
-                            new File(customerId, "temp").mkdir();
+                            new File(supplierId, "global").mkdir();
+                            new File(supplierId, "temp").mkdir();
                         }
                     }
                 }
