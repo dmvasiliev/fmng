@@ -1,7 +1,7 @@
 package servlets;
 
 import org.apache.log4j.Logger;
-import services.ProjectUtils;
+import utils.ProjectUtils;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;

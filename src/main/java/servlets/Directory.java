@@ -1,8 +1,8 @@
 package servlets;
 
 import com.google.gson.Gson;
-import services.FileInfo;
-import services.ProjectUtils;
+import domain.FileInfo;
+import utils.ProjectUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -22,9 +22,6 @@ import static java.nio.file.Paths.get;
  */
 
 public class Directory extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 

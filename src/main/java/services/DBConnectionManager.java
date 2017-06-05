@@ -1,22 +1,32 @@
 package services;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import org.apache.log4j.Logger;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
 
 /**
  * Created by vasiliev on 5/31/2017.
  */
 public class DBConnectionManager {
+    private final static Logger logger = Logger.getLogger(DBConnectionManager.class);
 
-    private Connection connection;
+    private static DataSource ds = null;
 
-    public DBConnectionManager(String dbURL, String user, String pwd) throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.jdbc.Driver");
-        this.connection = DriverManager.getConnection(dbURL, user, pwd);
-    }
+    public static DataSource getDataSource() {
 
-    public Connection getConnection() {
-        return this.connection;
+        if (ds != null) {
+            return ds;
+        } else {
+            try {
+                Context initCtx = new InitialContext();
+                ds = (DataSource) initCtx.lookup("java:comp/env/jdbc/fmdb");
+            } catch (Exception e) {
+                logger.debug(e.getMessage());
+            }
+            return ds;
+        }
+
     }
 }

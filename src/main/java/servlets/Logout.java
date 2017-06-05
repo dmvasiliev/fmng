@@ -20,9 +20,4 @@ public class Logout extends HttpServlet {
         response.setDateHeader("Expires", 0);
         response.getWriter().write("SUCCESS");
     }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    }
 }
